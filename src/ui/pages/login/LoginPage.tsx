@@ -1,7 +1,7 @@
 import {FC, useRef} from "react";
 import {useTranslation} from "react-i18next";
 import {Form, Card, FormItem, Input, FormSubmit, FormHelpers} from "@hi-ui/hiui";
-import logo192 from "../../../static/drawable/logo192.png"
+import logo from "../../../static/drawable/logo.svg"
 import {UserPref} from "../../../core/util/UserPref";
 
 const LoginPage: FC = () => {
@@ -16,7 +16,7 @@ const LoginPage: FC = () => {
             flexDirection: "column",
         }}>
             <img
-                src={logo192}
+                src={logo}
                 alt={"logo"}
                 style={{
                     width: 70,
