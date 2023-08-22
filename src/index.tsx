@@ -1,31 +1,27 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import reportWebVitals from './reportWebVitals';
-import {createBrowserRouter, createRoutesFromElements, Outlet, Route, RouterProvider} from "react-router-dom";
-import HomePage from "./component/home/HomePage";
-import Share from "./component/share/SharePage";
-import SharePage from "./component/share/SharePage";
-import UserPage from "./component/user/UserPage";
+import i18next from "i18next";
+import I18nextBrowserLanguageDetector from "i18next-browser-languagedetector";
+import {initReactI18next} from "react-i18next";
+import {resources} from "./react-i18next/resources";
+import {createRoot} from "react-dom/client";
+import React from "react";
+import App from "./ui/pages/App";
+import reportWebVitals from "./reportWebVitals";
 
-const router = createBrowserRouter(
-    createRoutesFromElements(
-        <>
-            <Route path="/share/:share" element={<SharePage />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/user" element={<UserPage />}>
-                
-            </Route>
-        </>
-    )
+i18next.use(I18nextBrowserLanguageDetector)
+    .use(initReactI18next)
+    .init({
+        resources,
+        fallbackLng: "zh",
+        lng: navigator.language,
+    })
+
+const container = document.getElementById("root") as Element;
+const root = createRoot(container);
+
+root.render(
+    <App />
 )
 
-
-ReactDOM.createRoot(document.getElementById("root")!).render(
-    <React.StrictMode>
-        <RouterProvider router={router} />
-    </React.StrictMode>
-)
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
