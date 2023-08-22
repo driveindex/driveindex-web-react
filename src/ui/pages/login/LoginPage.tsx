@@ -1,6 +1,7 @@
 import {FC, useRef} from "react";
 import {useTranslation} from "react-i18next";
 import {Form, Card, FormItem, Input, FormSubmit, FormHelpers, Button} from "@hi-ui/hiui";
+import logo192 from "../../../static/drawable/logo192.png"
 
 const LoginPage: FC = () => {
     const { t } = useTranslation()
@@ -10,13 +11,25 @@ const LoginPage: FC = () => {
     return (
         <div style={{
             display: "flex",
-            justifyContent: "center",
-            alignItems: 'center'
+            alignItems: "center",
+            flexDirection: "column",
         }}>
-            <Card
-                title={t("login_title")}
+            <img
+                src={logo192}
+                alt={"logo"}
                 style={{
-                    width: 500,
+                    width: 70,
+                    height: 70,
+                    marginTop: 16,
+                    marginBottom: 16,
+                }}/>
+            <div style={{
+                fontSize: 20,
+            }}>{t("login_title")}</div>
+            <Card
+                style={{
+                    width: 310,
+                    marginTop: 24,
                 }}>
                 <Form
                     initialValues={{ username: `${localStorage["username"] ?? ""}`, password: "" }}
@@ -50,12 +63,7 @@ const LoginPage: FC = () => {
                         showColon={false}>
                         <Input type={"password"}/>
                     </FormItem>
-                    <FormItem
-                        labelPlacement={"top"}
-                        style={{
-                            display: "flex",
-                            justifyContent: "center",
-                        }}>
+                    <FormItem labelPlacement={"top"}>
                         <FormSubmit
                             type={"primary"}
                             onClick={(value, _) => {
@@ -65,7 +73,7 @@ const LoginPage: FC = () => {
                                 console.log("Get form value:", value)
                             }}
                             style={{
-                                width: 180,
+                                width: "100%"
                             }}>{
                             t("login_action")
                         }</FormSubmit>

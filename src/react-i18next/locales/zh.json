@@ -1,6 +1,6 @@
 {
   "title": "DriveIndex",
-  "login_title": "登录 DriveIndex",
+  "login_title": "登录到 DriveIndex",
   "login_username": "账号",
   "login_username_hint": "请输入账号",
   "login_username_empty": "账号为空！",
