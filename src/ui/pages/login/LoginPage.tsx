@@ -1,7 +1,8 @@
 import {FC, useRef} from "react";
 import {useTranslation} from "react-i18next";
-import {Form, Card, FormItem, Input, FormSubmit, FormHelpers, Button} from "@hi-ui/hiui";
+import {Form, Card, FormItem, Input, FormSubmit, FormHelpers} from "@hi-ui/hiui";
 import logo192 from "../../../static/drawable/logo192.png"
+import {UserPref} from "../../../core/util/UserPref";
 
 const LoginPage: FC = () => {
     const { t } = useTranslation()
@@ -32,7 +33,7 @@ const LoginPage: FC = () => {
                     marginTop: 24,
                 }}>
                 <Form
-                    initialValues={{ username: `${localStorage["username"] ?? ""}`, password: "" }}
+                    initialValues={{ username: UserPref.Username, password: "" }}
                     labelWidth={80}
                     rules={{
                         username: [

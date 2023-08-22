@@ -17,9 +17,10 @@ i18next.use(I18nextBrowserLanguageDetector)
 
 const container = document.getElementById("root") as Element;
 const root = createRoot(container);
-
 root.render(
-    <App />
+    <React.StrictMode>
+        <App />
+    </React.StrictMode>
 )
 
 
