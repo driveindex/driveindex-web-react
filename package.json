@@ -5,6 +5,7 @@
   "dependencies": {
     "@hi-ui/core": "^4.0.5",
     "@hi-ui/hiui": "^4.2.11",
+    "axios": "^1.4.0",
     "i18next": "^23.2.3",
     "i18next-browser-languagedetector": "^7.0.2",
     "misans": "^3.1.1",
