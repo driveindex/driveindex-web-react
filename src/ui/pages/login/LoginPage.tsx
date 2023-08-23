@@ -22,6 +22,8 @@ const LoginPage: FC = () => {
             display: "flex",
             alignItems: "center",
             flexDirection: "column",
+            backgroundColor: "#f6f9fc",
+            height: "100vh",
         }}>
             <img
                 src={logo}
