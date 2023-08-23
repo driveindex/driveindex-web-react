@@ -1,8 +1,7 @@
 import {Dispatch, FC, SetStateAction, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {Form, Card, FormItem, Input, FormSubmit, FormHelpers, Button, Alert} from "@hi-ui/hiui";
+import {Form, Card, FormItem, Input, FormSubmit, FormHelpers, Alert} from "@hi-ui/hiui";
 import logo from "../../../static/drawable/logo.svg"
-import axios from "axios";
 import {UserPref} from "../../../core/util/UserPref";
 import {useNavigate} from "react-router-dom";
 import {NavigateFunction} from "react-router/dist/lib/hooks";
@@ -22,17 +21,16 @@ const LoginPage: FC = () => {
             display: "flex",
             alignItems: "center",
             flexDirection: "column",
-            backgroundColor: "#f6f9fc",
             height: "100vh",
         }}>
             <img
                 src={logo}
                 alt={"logo"}
                 style={{
-                    width: 70,
-                    height: 70,
-                    marginTop: 16,
-                    marginBottom: 16,
+                    width: 60,
+                    height: 60,
+                    marginTop: 36,
+                    marginBottom: 24,
                 }}/>
             <div style={{
                 fontSize: 20,

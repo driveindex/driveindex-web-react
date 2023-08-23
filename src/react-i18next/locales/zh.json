@@ -8,5 +8,8 @@
   "login_password_hint": "请输入密码",
   "login_password_empty": "密码为空！",
   "login_action": "登录",
-  "login_failed": "登录失败："
+  "login_failed": "登录失败：",
+
+  "home_go_to_profile": "个人主页",
+  "home_logout": "退出登录"
 }
