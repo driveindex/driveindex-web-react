@@ -11,5 +11,9 @@
   "login_failed": "登录失败：",
 
   "home_go_to_profile": "个人主页",
-  "home_logout": "退出登录"
+  "home_logout": "退出登录",
+
+  "home_file_root": "我的网盘",
+  "home_file_create_dir": "新建文件夹",
+  "home_file_create_link": "创建软连接"
 }
