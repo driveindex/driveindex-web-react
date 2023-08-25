@@ -1,11 +1,9 @@
 import React, {Dispatch, FC, SetStateAction, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {UserPref} from "../../../core/prefs/UserPref";
-import logo from "../../../static/drawable/logo.svg"
 import {useTranslation} from "react-i18next";
-import {Avatar, Breadcrumb, Button, message, Popover, Scrollbar} from "@hi-ui/hiui";
+import {Breadcrumb, Button, message, Scrollbar} from "@hi-ui/hiui";
 import {PlusOutlined, LinkOutlined} from "@hi-ui/icons"
-import UserMenu from "../../components/home/UserMenu";
 import {BreadcrumbContainer, FileList} from "../../components/home/FileList";
 import {useQuery} from "../../../core/hooks/useQuery";
 import useBreadcrumb from "../../../core/hooks/useBreadcrumb";
@@ -13,6 +11,7 @@ import {useBreakpointDown, useBreakpointUp} from "../../../core/hooks/useViewpor
 import {DriveIndexAPI} from "../../../core/axios";
 import {checkLoginStatus, useLoginExpiredDialog} from "../../../core/hooks/useLoginExpiredDialog";
 import {TFunction} from "i18next";
+import {CommonHeader} from "../../components/home/CommonHeader";
 
 const HomePage: FC = () => {
     const navigate = useNavigate()
@@ -27,15 +26,12 @@ const HomePage: FC = () => {
     const path = query.get("path")
 
     const showLoginExpiredDialog = useLoginExpiredDialog()
-    const [ fileList, setFileList ] = useState<{}[]>()
-    const [ loading, setLoading ] = useState(false)
+    const [ fileList, setFileList ] = useState<{}[] | undefined>(undefined)
     useEffect(() => {
         if (path == null) {
             navigate("/home?path=%2F")
         } else {
-            setFileList(undefined)
-            setLoading(true)
-            getFileListByPath(path, setFileList, setLoading, showLoginExpiredDialog, t)
+            getFileListByPath(path, setFileList, showLoginExpiredDialog, t)
         }
     }, [path])
 
@@ -59,22 +55,7 @@ const HomePage: FC = () => {
 
     return (
         <>
-            <div style={{
-                display: "flex",
-                alignItems: "center",
-                paddingTop: 15,
-                paddingBottom: 15,
-                paddingLeft: 24,
-                paddingRight: 24,
-            }}>
-                <img style={{ width: 34, height: 34 }} src={logo} alt={"logo"}/>
-                <div style={{ marginLeft: 10, color: "#1f2733" }}><strong>{t("title")}</strong></div>
-                <div style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
-                    <Popover placement={"bottom-end"} content={<UserMenu />}>
-                        <Avatar initials={UserPref.Username.charAt(0).toUpperCase()} />
-                    </Popover>
-                </div>
-            </div>
+            <CommonHeader isShowInProfile={false} />
             <div
                 style={{
                     display: "flex",
@@ -109,8 +90,7 @@ const HomePage: FC = () => {
                             isMdUp={isMdUp}
                             showAsMobile={showAsMobile}
                             breadcrumb={breadcrumb}
-                            list={fileList}
-                            loading={loading}/>
+                            list={fileList}/>
                     </Scrollbar>
                 </div>
             </div>
@@ -121,10 +101,10 @@ const HomePage: FC = () => {
 function getFileListByPath(
     path: string,
     setFileList: Dispatch<SetStateAction<{}[] | undefined>>,
-    setLoading: Dispatch<SetStateAction<boolean>>,
     showLoginExpiredDialog: () => void,
     t: TFunction<"translation", undefined>,
 ) {
+    setFileList(undefined)
     DriveIndexAPI.get("/api/user/file/list?path=" + encodeURIComponent(path), {
         headers: {
             "Authorization": true
@@ -141,8 +121,6 @@ function getFileListByPath(
         } else {
             setFileList(resp.data["data"]["content"])
         }
-    }).finally(() => {
-        setLoading(false)
     })
 }
 

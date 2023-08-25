@@ -2,6 +2,7 @@
   "title": "DriveIndex",
 
   "loading": "加载中...",
+  "not_found": "这里什么都没有",
 
   "login_title": "登录到 DriveIndex",
   "login_username": "账号",
@@ -27,5 +28,10 @@
 
   "home_file_list_head_name": "文件名",
   "home_file_list_head_modify": "修改时间",
-  "home_file_list_head_size": "大小"
+  "home_file_list_head_size": "大小",
+
+  "profile_common": "常规设置",
+  "profile_account": "账户",
+  "profile_drive": "储存池",
+  "profile_password": "密码"
 }

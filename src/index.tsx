@@ -3,11 +3,10 @@ import I18nextBrowserLanguageDetector from "i18next-browser-languagedetector";
 import {initReactI18next} from "react-i18next";
 import {resources} from "./react-i18next/resources";
 import {createRoot} from "react-dom/client";
-import React from "react";
-import App from "./ui/pages/App";
+import React, {lazy, Suspense} from "react";
 import reportWebVitals from "./reportWebVitals";
 import {ViewportProvider} from "./core/hooks/useViewport";
-import {LoginExpired} from "./core/hooks/useLoginExpiredDialog";
+import {Loading} from "@hi-ui/hiui";
 
 i18next.use(I18nextBrowserLanguageDetector)
     .use(initReactI18next)
@@ -17,11 +16,15 @@ i18next.use(I18nextBrowserLanguageDetector)
         lng: navigator.language,
     })
 
+const App = lazy(() => import("./ui/pages/App"))
+
 const container = document.getElementById("root") as Element;
 const root = createRoot(container);
 root.render(
     <ViewportProvider>
-        <App />
+        <Suspense fallback={<Loading full={true}/>}>
+            <App />
+        </Suspense>
     </ViewportProvider>
 )
 

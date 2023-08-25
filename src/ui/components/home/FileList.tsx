@@ -1,6 +1,7 @@
 import React, {FC} from "react";
 import {useTranslation} from "react-i18next";
-import {Col, EmptyState, Grid, Loading, Row} from "@hi-ui/hiui";
+import {Col, EmptyState, Loading, Row} from "@hi-ui/hiui";
+import RespLayoutProps from "../../../core/props/RespLayoutProps";
 
 export enum FileListSortBy {
     NAME, SIZE, CREATE_TIME, MODIFIED_TIME
@@ -8,10 +9,9 @@ export enum FileListSortBy {
 
 export interface FileListProps  {
     list?: {}[]
-    loading?: boolean
 }
 
-export const FileList: FC<FileListProps & FileListHeaderProps & RealFileListProps> = (props) => {
+export const FileList: FC<FileListProps & FileListHeaderProps & RespLayoutProps> = (props) => {
     const realList = <RealList {...props} />
     return (
         <div
@@ -32,7 +32,7 @@ export interface BreadcrumbContainerProps {
     marginTop?: number
 }
 
-export const BreadcrumbContainer: FC<BreadcrumbContainerProps & RealFileListProps> = (props) => {
+export const BreadcrumbContainer: FC<BreadcrumbContainerProps & RespLayoutProps> = (props) => {
     return <div
         style={{
             borderRadius: props.isMdUp ? 10 : 0,
@@ -45,33 +45,35 @@ export const BreadcrumbContainer: FC<BreadcrumbContainerProps & RealFileListProp
     }</div>
 }
 
-interface RealFileListProps {
-    isMdUp: boolean
-    showAsMobile?: boolean
-}
-
-const RealList: FC<RealFileListProps & FileListProps> = (props) => {
+const RealList: FC<RespLayoutProps & FileListProps> = (props) => {
     const { t } = useTranslation()
-    let list: {}[] | undefined
-    if (props.list !== undefined && props.list.length > 0) {
-        list = props.list
+    let listContent: JSX.Element[] | JSX.Element | undefined
+    if (props.list === undefined) {
+        listContent = undefined
+    } else if (props.list.length > 0) {
+        listContent = props.list.map(() =>
+            <FileListItem
+                isMdUp={props.isMdUp} />
+        )
     } else {
-        list = undefined
+        listContent = <EmptyState
+            style={{
+                paddingTop: 30,
+                paddingBottom: 30,
+            }}
+            size={"lg"} />
     }
     return (
         <div>
             <FileListHeader {...props} />
-            <Loading
-                visible={props.loading}
-                style={{
-                    height: 200,
-                }}
-                content={t("loading")} />
             {
-                !props.loading && (list !== undefined ? list.map(() =>
-                    <FileListItem
-                        isMdUp={props.isMdUp} />
-                ) : <EmptyState />)
+                listContent !== undefined
+                    ? listContent
+                    : <Loading
+                        style={{
+                            height: 200,
+                        }}
+                        content={t("loading")} />
             }
         </div>
     )
@@ -86,7 +88,7 @@ interface FileListHeaderProps {
     breadcrumb?: React.ReactNode
 }
 
-const FileListHeader: FC<FileListHeaderProps & RealFileListProps> = (props) => {
+const FileListHeader: FC<FileListHeaderProps & RespLayoutProps> = (props) => {
     const { t } = useTranslation()
     return (
         <>
@@ -140,7 +142,7 @@ interface FileListItemProps {
 
 }
 
-export const FileListItem: FC<FileListItemProps & RealFileListProps> = (props) => {
+export const FileListItem: FC<FileListItemProps & RespLayoutProps> = (props) => {
     const { t } = useTranslation()
     return (
         <div
