@@ -1,10 +1,9 @@
 import {Button} from "@hi-ui/hiui";
 import React, {FC} from "react";
 import {NavigateFunction} from "react-router/dist/lib/hooks";
-import {UserPref} from "../../../core/util/UserPref";
+import {UserPref} from "../../../core/prefs/UserPref";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
-import {useQuery} from "../../../core/util/useQuery";
 
 const UserMenu: FC = () => {
     const { t } = useTranslation()

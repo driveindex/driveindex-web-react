@@ -6,6 +6,8 @@ import {createRoot} from "react-dom/client";
 import React from "react";
 import App from "./ui/pages/App";
 import reportWebVitals from "./reportWebVitals";
+import {ViewportProvider} from "./core/hooks/useViewport";
+import {LoginExpired} from "./core/hooks/useLoginExpiredDialog";
 
 i18next.use(I18nextBrowserLanguageDetector)
     .use(initReactI18next)
@@ -18,9 +20,9 @@ i18next.use(I18nextBrowserLanguageDetector)
 const container = document.getElementById("root") as Element;
 const root = createRoot(container);
 root.render(
-    <React.StrictMode>
+    <ViewportProvider>
         <App />
-    </React.StrictMode>
+    </ViewportProvider>
 )
 
 

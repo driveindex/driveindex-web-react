@@ -2,11 +2,11 @@ import {Dispatch, FC, SetStateAction, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Form, Card, FormItem, Input, FormSubmit, FormHelpers, Alert} from "@hi-ui/hiui";
 import logo from "../../../static/drawable/logo.svg"
-import {UserPref} from "../../../core/util/UserPref";
+import {UserPref} from "../../../core/prefs/UserPref";
 import {useNavigate} from "react-router-dom";
 import {NavigateFunction} from "react-router/dist/lib/hooks";
 import {TFunction} from "i18next";
-import DriveIndexAPI from "../../../core/axios";
+import {DriveIndexAPI} from "../../../core/axios";
 
 const LoginPage: FC = () => {
     const { t } = useTranslation()
@@ -132,7 +132,7 @@ function doLogin(
             username: username,
             password: password,
         }).then(value => {
-            if (value.data["code"] != 200) {
+            if (value.data["code"] !== 200) {
                 showAlert(t("login_failed") + value.data["message"])
                 return
             }

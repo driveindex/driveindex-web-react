@@ -3,11 +3,8 @@
   "version": "2.0.0-alpha01",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
     "@hi-ui/core": "^4.0.5",
     "@hi-ui/hiui": "^4.2.11",
-    "@mui/material": "^5.14.5",
     "axios": "^1.4.0",
     "i18next": "^23.2.3",
     "i18next-browser-languagedetector": "^7.0.2",

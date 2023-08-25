@@ -1,13 +1,16 @@
 import {TFunction} from "i18next";
 import {BreadcrumbDataItem} from "@hi-ui/breadcrumb/lib/types/types";
 
-export default (t: TFunction<"translation", undefined>, pathStr: string) => {
-    const names = getAbsolutePath(pathStr)
-    let currentPath = "/"
+export default (t: TFunction<"translation", undefined>, pathStr: string | null) => {
     const data: (BreadcrumbDataItem & { link: string })[] = [{
         title: t("home_file_root"),
         link: "/home?path=%2F",
     }]
+    if (pathStr == null) {
+        return data
+    }
+    const names = getAbsolutePath(pathStr)
+    let currentPath = "/"
     for (const name of names) {
         if (currentPath !== "/") {
             currentPath += "/"
@@ -24,9 +27,9 @@ export default (t: TFunction<"translation", undefined>, pathStr: string) => {
 function getAbsolutePath(path: string): string[] {
     const names: string[] = []
     for (const item of path.split("/")) {
-        if (item == "..") {
+        if (item === "..") {
             names.pop()
-        } else if (item == ".") {
+        } else if (item === ".") {
         } else if (!/^\s*$/.test(item)) {
             names.push(item)
         }
