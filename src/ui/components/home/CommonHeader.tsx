@@ -1,5 +1,5 @@
-import {Avatar, Button, Drawer, Popover} from "@hi-ui/hiui";
-import React, {FC, useState} from "react";
+import {Avatar, Button, Popover} from "@hi-ui/hiui";
+import React, {FC} from "react";
 import {NavigateFunction} from "react-router/dist/lib/hooks";
 import {UserPref} from "../../../core/prefs/UserPref";
 import {useTranslation} from "react-i18next";

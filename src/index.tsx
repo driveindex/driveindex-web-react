@@ -7,6 +7,7 @@ import React, {lazy, Suspense} from "react";
 import reportWebVitals from "./reportWebVitals";
 import {ViewportProvider} from "./core/hooks/useViewport";
 import {Loading} from "@hi-ui/hiui";
+import {LoadingCover} from "./core/hooks/useLoading";
 
 i18next.use(I18nextBrowserLanguageDetector)
     .use(initReactI18next)
@@ -23,7 +24,9 @@ const root = createRoot(container);
 root.render(
     <ViewportProvider>
         <Suspense fallback={<Loading full={true}/>}>
-            <App />
+            <LoadingCover>
+                <App />
+            </LoadingCover>
         </Suspense>
     </ViewportProvider>
 )

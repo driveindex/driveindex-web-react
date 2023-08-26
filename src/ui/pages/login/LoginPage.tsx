@@ -40,6 +40,7 @@ const LoginPage: FC = () => {
                     <Alert
                         title={<div>{alert}</div>}
                         closeable={true}
+                        type={"danger"}
                         onClose={() => {setAlert(null)}}
                         style={{
                             width: 310,
@@ -76,13 +77,13 @@ const LoginPage: FC = () => {
                         field={"username"} valueType={"string"}
                         label={t("login_username")} labelPlacement={"top"}
                         showColon={false}>
-                        <Input />
+                        <Input disabled={loginDoing}/>
                     </FormItem>
                     <FormItem
                         field={"password"} valueType={"string"}
                         label={t("login_password")} labelPlacement={"top"}
                         showColon={false}>
-                        <Input type={"password"}/>
+                        <Input type={"password"} disabled={loginDoing}/>
                     </FormItem>
                     <FormItem labelPlacement={"top"}>
                         <FormSubmit
@@ -118,14 +119,6 @@ function doLogin(
     t: TFunction<"translation", undefined>,
     navigate: NavigateFunction,
 ) {
-    if (username === '') {
-        showAlert(t("login_username_empty"))
-        return
-    }
-    if (password === '') {
-        showAlert(t("login_password_empty"))
-        return
-    }
     setLoading(true)
     setTimeout(() => {
         DriveIndexAPI.post("/api/login", {

@@ -44,8 +44,9 @@ const ProfilePage: FC = () => {
                             open={drawer}
                             direction={"left"}
                             size={300}
+                            duration={300}
                             onClose={() => openDrawer(false)}>
-                            <ProfileDrawer />
+                            <ProfileDrawer onItemClicked={() => openDrawer(false)} />
                         </Drawer>
                     ) : (
                         <>
@@ -53,7 +54,7 @@ const ProfilePage: FC = () => {
                                 width: 300,
                                 height: "100%",
                             }}>
-                                <ProfileDrawer />
+                                <ProfileDrawer onItemClicked={() => openDrawer(false)} />
                             </div>
                         </>
                     )
@@ -70,7 +71,9 @@ const ProfilePage: FC = () => {
     )
 }
 
-const ProfileDrawer: FC = () => {
+const ProfileDrawer: FC<{
+    onItemClicked?: () => void
+}> = (props) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const data: MenuDataItem[] = [
@@ -103,6 +106,7 @@ const ProfileDrawer: FC = () => {
             activeId={useLocation().pathname}
             onClick={(id, item) => {
                 navigate(id as string)
+                props.onItemClicked && props.onItemClicked()
             }}/>
     )
 }

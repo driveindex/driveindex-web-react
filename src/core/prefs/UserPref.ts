@@ -47,7 +47,7 @@ export class UserPref {
         if (value == null) {
             return def
         } else {
-            return value == "true"
+            return value === "true"
         }
     }
 }

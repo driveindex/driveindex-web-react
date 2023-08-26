@@ -3,6 +3,7 @@ import {Modal} from "@hi-ui/hiui";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 import {AxiosResponse} from "axios";
+import {TFunction} from "i18next";
 
 const LoginExpiredContext: Context<{
     showLoginExpiredDialog?: () => void
