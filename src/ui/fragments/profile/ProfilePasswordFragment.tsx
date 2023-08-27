@@ -1,10 +1,8 @@
 import React, {Dispatch, FC, SetStateAction, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Alert, Form, FormHelpers, FormItem, FormSubmit, Input, Modal} from "@hi-ui/hiui";
-import "./profile.css"
 import {TFunction} from "i18next";
 import {DriveIndexAPI} from "../../../core/axios";
-import {UserPref} from "../../../core/prefs/UserPref";
 import {checkLoginStatus, useLoginExpiredDialog} from "../../../core/hooks/useLoginExpiredDialog";
 import {useNavigate} from "react-router-dom";
 

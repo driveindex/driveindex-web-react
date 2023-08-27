@@ -44,7 +44,6 @@ const LoginPage: FC = () => {
                         onClose={() => {setAlert(null)}}
                         style={{
                             width: 310,
-                            marginTop: 20,
                         }}/>
                 )
             }

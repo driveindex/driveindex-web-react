@@ -2,12 +2,12 @@ import React, {FC, useState} from "react";
 import {CommonHeader} from "../../../components/home/CommonHeader";
 import {useBreakpointDown} from "../../../../core/hooks/useViewport";
 import {Outlet, useLocation, useNavigate} from "react-router-dom"
-
 import Drawer from 'react-modern-drawer'
 import 'react-modern-drawer/dist/index.css'
 import {Menu, Scrollbar} from "@hi-ui/hiui";
 import {MenuDataItem} from "@hi-ui/menu/lib/types/types";
 import {useTranslation} from "react-i18next";
+import "./ProfilePage.css"
 
 const ProfilePage: FC = () => {
     const showAsMobile = useBreakpointDown("sm")
@@ -19,7 +19,8 @@ const ProfilePage: FC = () => {
             style={{
                 backgroundColor: "white",
                 height: "100%",
-            }}>
+            }}
+            className={"dirveindex-profile"}>
             <div
                 style={{
                     boxShadow: "0 4px 8px rgba(0,0,0,.05), inset 0 -1px 0 #ebedf0"

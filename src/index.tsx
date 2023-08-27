@@ -8,6 +8,7 @@ import reportWebVitals from "./reportWebVitals";
 import {ViewportProvider} from "./core/hooks/useViewport";
 import {Loading} from "@hi-ui/hiui";
 import {LoadingCover} from "./core/hooks/useLoading";
+import "./index.css"
 
 i18next.use(I18nextBrowserLanguageDetector)
     .use(initReactI18next)

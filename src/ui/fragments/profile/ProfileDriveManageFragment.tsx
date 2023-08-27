@@ -1,12 +1,14 @@
 import React, {FC, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {Breadcrumb, Card, message, Row, Scrollbar} from "@hi-ui/hiui";
+import {Breadcrumb, Button, Card, message, Row, Scrollbar, Space} from "@hi-ui/hiui";
 import {LoadingCover, useLoading} from "../../../core/hooks/useLoading";
 import {BreadcrumbDataItem} from "@hi-ui/breadcrumb/lib/types/types";
 import {DriveIndexAPI} from "../../../core/axios";
 import {AxiosResponse} from "axios";
 import {checkLoginStatus, useLoginExpiredDialog} from "../../../core/hooks/useLoginExpiredDialog";
 import {useLocation, useNavigate} from "react-router-dom";
+import "./ProfileDriveManageFragment.css"
+import {PlusOutlined} from "@hi-ui/icons"
 
 
 type ClientBreadcrumbDataItem = BreadcrumbDataItem & {
@@ -19,7 +21,7 @@ const ProfileDriveManageFragment: FC = () => {
     const { state } = useLocation()
 
     return (
-        <>
+        <div className={"dirveindex-profile-drive"}>
             <h2>{t("profile_drive_title")}</h2>
             <p>{t("profile_drive_text")}</p>
             <Row>
@@ -28,7 +30,7 @@ const ProfileDriveManageFragment: FC = () => {
             <LoadingCover>
                 <DriveList state={state} />
             </LoadingCover>
-        </>
+        </div>
     )
 }
 
@@ -91,18 +93,9 @@ const DriveList: FC<DriveListProps> = (props) => {
     }, [props.state])
 
     return (
-        <div
-            className={"hi-v4-card hi-v4-card--bordered"}
-            style={{
-                maxWidth: 640,
-                height: 400,
-            }}>
-            <div
-                className={"hi-v4-card__header hi-v4-card__header--divider"}
-                style={{
-                    marginBottom: 0,
-                }}>
-                <div className={"hi-v4-card__title"}>
+        <Card
+            title={
+                <Row style={{padding: "0 6px"}}>
                     <Breadcrumb
                         data={breadcrumbData}
                         onClick={(e, i, index) => {
@@ -115,9 +108,20 @@ const DriveList: FC<DriveListProps> = (props) => {
                         size={"md"}
                         style={{
                             marginBottom: 0,
+                            display: "flex",
+                            flex: 1,
                         }}/>
-                </div>
-            </div>
+                    <Button
+                        type={"primary"}
+                        icon={<PlusOutlined />}>{
+                        props.state === null ? t("profile_drive_add_client") : t("profile_drive_add_account")
+                    }</Button>
+                </Row>
+            }
+            style={{
+                height: 400,
+            }}
+            showHeaderDivider={true}>
             <Scrollbar>
                 <div
                     style={{
@@ -140,7 +144,7 @@ const DriveList: FC<DriveListProps> = (props) => {
                     })
                 }</div>
             </Scrollbar>
-        </div>
+        </Card>
     )
 }
 
