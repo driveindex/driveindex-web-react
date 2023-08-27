@@ -2,7 +2,7 @@ import React, {Dispatch, FC, SetStateAction, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {UserPref} from "../../../core/prefs/UserPref";
 import {useTranslation} from "react-i18next";
-import {Breadcrumb, Button, message, Scrollbar} from "@hi-ui/hiui";
+import {Breadcrumb, Button, Col, message, Row, Scrollbar} from "@hi-ui/hiui";
 import {PlusOutlined, LinkOutlined} from "@hi-ui/icons"
 import {BreadcrumbContainer, FileList} from "../../components/home/FileList";
 import {useQuery} from "../../../core/hooks/useQuery";
@@ -48,31 +48,27 @@ const HomePage: FC = () => {
                 navigate(breadcrumbData[index].link)
             }}
             style={{
-                marginLeft: 20,
-                marginRight: 20,
+                margin: "0 20px",
             }} />
     )
 
     return (
         <>
             <CommonHeader isShowInProfile={false} />
-            <div
+            <Col
                 style={{
                     display: "flex",
                     alignItems: "center",
                     flexDirection: "column",
                 }}>
-                <div style={{width: contentWidth}}>
-                    <div
+                <Col style={{width: contentWidth}}>
+                    <Row
                         style={{
-                            display: "flex",
-                            alignItems: "center",
-                            paddingLeft: isMdUp ? 0 : 20,
-                            paddingRight: isMdUp ? 0 : 20,
+                            padding: "0 " + (isMdUp ? 0 : 20) + "px",
                         }}>
                         <Button type={"primary"} icon={<PlusOutlined />} size={"lg"}>{t("home_file_create_dir")}</Button>
                         <Button type={"secondary"} icon={<LinkOutlined />} size={"lg"}>{t("home_file_create_link")}</Button>
-                    </div>
+                    </Row>
                     {
                         showAsMobile || (
                             <BreadcrumbContainer marginTop={20} isMdUp={isMdUp}>
@@ -92,8 +88,8 @@ const HomePage: FC = () => {
                             breadcrumb={breadcrumb}
                             list={fileList}/>
                     </Scrollbar>
-                </div>
-            </div>
+                </Col>
+            </Col>
         </>
     )
 }

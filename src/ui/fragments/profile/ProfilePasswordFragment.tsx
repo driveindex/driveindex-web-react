@@ -14,7 +14,6 @@ const ProfilePasswordFragment: FC = () => {
 
     const [ loginDoing, setLoginDoing] = useState(false)
     const [ alert, setAlert ] = useState<string | null>(null)
-    const [ reLogin, setReLogin ] = useState<boolean>(false)
     const showLoginExpiredDialog = useLoginExpiredDialog()
 
     const formRef = React.useRef<FormHelpers>(null)
@@ -43,7 +42,6 @@ const ProfilePasswordFragment: FC = () => {
                 cancelText={null}
                 onConfirm={() => {
                     navigate("/login")
-                    setReLogin(false)
                 }}
                 type={"success"}>
 

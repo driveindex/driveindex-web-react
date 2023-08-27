@@ -49,5 +49,12 @@
   "profile_password_error_empty": "密码不能为空",
   "profile_password_error_format": "请输入包括数字和字母、长度 8 到 16 位的密码组合",
   "profile_password_error_conform_empty": "请再次输入新密码",
-  "profile_password_error_conform": "两次密码不一致"
+  "profile_password_error_conform": "两次密码不一致",
+
+  "profile_drive_title": "存储池",
+  "profile_drive_text": "您需要添加存储池才能正常使用 DriveIndex。",
+  "profile_drive_add_client": "添加客户端",
+  "profile_drive_add_account": "添加账号",
+  "profile_drive_breadcrumb": "我的储存池",
+  "profile_drive_failed": "获取失败："
 }

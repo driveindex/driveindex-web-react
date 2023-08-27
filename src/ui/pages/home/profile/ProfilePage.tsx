@@ -101,7 +101,8 @@ const ProfileDrawer: FC<{
             style={{
                 width: "100%",
                 height: "100%",
-                marginTop: 10,
+                paddingTop: 20,
+                backgroundColor: "transparent",
             }}
             activeId={useLocation().pathname}
             onClick={(id, item) => {

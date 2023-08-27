@@ -2,6 +2,7 @@ import React, {Context, createContext, FC, useContext, useState} from "react";
 import {Loading} from "@hi-ui/hiui";
 
 const LoadingContext: Context<{
+    isLoading?: boolean
     setLoading?: (loading: boolean) => void
 }> = createContext({})
 
@@ -9,7 +10,7 @@ const LoadingContext: Context<{
 export const LoadingCover: FC<{ children: React.ReactNode[] | React.ReactNode }> = (props) => {
     const [ loading, setLoading ] = useState(false)
     return (
-        <LoadingContext.Provider value={{setLoading: (loading) => setLoading(loading)}}>
+        <LoadingContext.Provider value={{isLoading: loading, setLoading: (loading) => setLoading(loading)}}>
             <Loading visible={loading}>
                 {props.children}
             </Loading>
@@ -18,6 +19,6 @@ export const LoadingCover: FC<{ children: React.ReactNode[] | React.ReactNode }>
 }
 
 export function useLoading() {
-    const { setLoading } = useContext(LoadingContext)
-    return setLoading!!
+    const { isLoading, setLoading } = useContext(LoadingContext)
+    return { isLoading: isLoading!!, setLoading: setLoading!! }
 }

@@ -22,10 +22,7 @@ export const CommonHeader: FC<CommonHeaderProps & RespLayoutProps> = (props) => 
         <div style={{
             display: "flex",
             alignItems: "center",
-            paddingTop: 15,
-            paddingBottom: 15,
-            paddingLeft: 24,
-            paddingRight: 24,
+            padding: "15px 24px",
         }}>
             {
                 (props.isShowInProfile && props.showAsMobile) && (
