@@ -4,7 +4,7 @@ import {UserPref} from "./prefs/UserPref";
 const isDev = (process.env.NODE_ENV === "development")
 
 export const DriveIndexAPI =  axios.create({
-    baseURL: isDev ? "https://drivetest.sgpublic.xyz" : undefined,
+    baseURL: isDev ? (process.env.REACT_APP_BASE_API ?? "https://drivetest.sgpublic.xyz") : undefined,
     validateStatus: (status) => status !== 404
 })
 

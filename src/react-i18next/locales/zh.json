@@ -56,5 +56,6 @@
   "profile_drive_add_client": "添加客户端",
   "profile_drive_add_account": "添加账号",
   "profile_drive_breadcrumb": "我的储存池",
-  "profile_drive_failed": "获取失败："
+  "profile_drive_failed": "获取失败：",
+  "profile_drive_last_modify": "最后修改："
 }

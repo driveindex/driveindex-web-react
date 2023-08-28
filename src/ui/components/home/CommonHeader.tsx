@@ -7,6 +7,7 @@ import {useNavigate} from "react-router-dom";
 import logo from "../../../static/drawable/logo.svg";
 import {MoveOutlined} from "@hi-ui/icons"
 import RespLayoutProps from "../../../core/props/RespLayoutProps";
+import {asInitials} from "../../../core/util/_String";
 
 export interface CommonHeaderProps {
     isShowInProfile: boolean
@@ -32,7 +33,7 @@ export const CommonHeader: FC<CommonHeaderProps & RespLayoutProps> = (props) => 
                         }}
                         appearance={"link"}
                         onClick={props.switchShowDrawer}>
-                        <MoveOutlined />
+                        <MoveOutlined size={20} />
                     </Button>
                 )
             }
@@ -42,7 +43,9 @@ export const CommonHeader: FC<CommonHeaderProps & RespLayoutProps> = (props) => 
                 {
                     (props.showAvatar === undefined || props.showAvatar) && (
                         <Popover placement={"bottom-end"} content={<UserMenu {...props} />}>
-                            <Avatar initials={UserPref.Username.charAt(0).toUpperCase()} />
+                            <Avatar
+                                initials={asInitials(UserPref.Username)}
+                                name={UserPref.Username}/>
                         </Popover>
                     )
                 }
