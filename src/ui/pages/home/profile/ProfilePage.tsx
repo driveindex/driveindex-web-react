@@ -60,13 +60,13 @@ const ProfilePage: FC = () => {
                         </>
                     )
                 }
-                <Scrollbar>
-                    <div style={{
-                        padding: 20,
-                    }}>
-                        <Outlet />
-                    </div>
-                </Scrollbar>
+                <div style={{
+                    padding: 20,
+                    width: "100%",
+                    height: "calc(100vh - 110px)"
+                }}>
+                    <Outlet />
+                </div>
             </div>
         </div>
     )

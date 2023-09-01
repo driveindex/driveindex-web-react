@@ -2,7 +2,7 @@ import React, {Dispatch, FC, SetStateAction, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {UserPref} from "../../../core/prefs/UserPref";
 import {useTranslation} from "react-i18next";
-import {Breadcrumb, Button, Col, message, Row, Scrollbar} from "@hi-ui/hiui";
+import {Breadcrumb, Button, Col, Form, FormItem, FormSubmit, Input, message, Modal, Row, Scrollbar} from "@hi-ui/hiui";
 import {PlusOutlined, LinkOutlined} from "@hi-ui/icons"
 import {BreadcrumbContainer, FileList} from "../../components/home/FileList";
 import {useQuery} from "../../../core/hooks/useQuery";
@@ -52,6 +52,9 @@ const HomePage: FC = () => {
             }} />
     )
 
+    const [ createDirShow, showCreateDir ] = useState(false)
+    const [ createDirLoading, setCreateLoading ] = useState(false)
+
     return (
         <>
             <CommonHeader isShowInProfile={false} />
@@ -66,7 +69,13 @@ const HomePage: FC = () => {
                         style={{
                             padding: "0 " + (isMdUp ? 0 : 20) + "px",
                         }}>
-                        <Button type={"primary"} icon={<PlusOutlined />} size={"lg"}>{t("home_file_create_dir")}</Button>
+                        <Button
+                            type={"primary"}
+                            icon={<PlusOutlined />}
+                            size={"lg"}
+                            onClick={() => showCreateDir(true)}>
+                            {t("home_file_create_dir")}
+                        </Button>
                         <Button type={"secondary"} icon={<LinkOutlined />} size={"lg"}>{t("home_file_create_link")}</Button>
                     </Row>
                     {
@@ -90,6 +99,43 @@ const HomePage: FC = () => {
                     </Scrollbar>
                 </Col>
             </Col>
+            <Modal
+                visible={createDirShow}
+                title={t("home_file_create_dir")}
+                onClose={() => showCreateDir(false)}
+                onConfirm={() => {
+                    setCreateLoading(true)
+                }}
+                confirmText={null}
+                cancelText={null}
+                disabledPortal={createDirLoading}>
+                <Form
+                    initialValues={{ name: "" }}
+                    rules={{
+                        name: [
+                            {
+                                required: true,
+                                type: "string",
+                                message: t("home_file_create_empty"),
+                            },
+                        ]
+                    }}>
+                    <FormItem
+                        field={"name"}
+                        labelPlacement={"top"}
+                        label={t("home_file_create_name")}>
+                        <Input />
+                    </FormItem>
+                    <FormSubmit
+                        onClick={(value, _) => {
+                            if (value === null) {
+                                return
+                            }
+                        }}>
+                        {t("home_file_create_action")}
+                    </FormSubmit>
+                </Form>
+            </Modal>
         </>
     )
 }
@@ -118,6 +164,14 @@ function getFileListByPath(
             setFileList(resp.data["data"]["content"])
         }
     })
+}
+
+function createDir(
+    path: string,
+    showLoginExpiredDialog: () => void,
+    t: TFunction<"translation", undefined>,
+) {
+
 }
 
 export default HomePage

@@ -1,17 +1,16 @@
-import React, {FC, useEffect, useState} from "react";
+import React, {FC, HTMLAttributes, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {
     Avatar,
     Breadcrumb,
     Button,
-    Card, EmptyState,
+    Card,
     List,
     ListDataItem,
     ListItem,
-    message,
+    message, Modal,
     Row,
-    Scrollbar,
-    Space
+    Scrollbar
 } from "@hi-ui/hiui";
 import {LoadingCover, useLoading} from "../../../../core/hooks/useLoading";
 import {BreadcrumbDataItem} from "@hi-ui/breadcrumb/lib/types/types";
@@ -25,8 +24,8 @@ import Ic_OneDrive from "../../../../static/drawable/drive/onedrive.svg"
 import Ic_Unknown from "../../../../static/drawable/drive/unknown.svg"
 import RespLayoutProps from "../../../../core/props/RespLayoutProps";
 import {useBreakpointDown, useBreakpointUp} from "../../../../core/hooks/useViewport";
-import {isMobile} from "react-device-detect"
 import {asInitials} from "../../../../core/util/_String";
+import ClientCreationDialog from "../../../components/profile/drive/ClientCreationDialog";
 
 
 type ClientBreadcrumbDataItem = BreadcrumbDataItem & {
@@ -42,12 +41,15 @@ const ProfileDriveManageFragment: FC = () => {
     const showAsMobile = useBreakpointDown("sm")
 
     return (
-        <div className={"dirveindex-profile-drive"}>
+        <div
+            className={"dirveindex-profile-drive"}
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100%"
+            }}>
             <h2>{t("profile_drive_title")}</h2>
             <p>{t("profile_drive_text")}</p>
-            <Row>
-
-            </Row>
             <LoadingCover>
                 <DriveList client={state} isMdUp={isMdUp} showAsMobile={showAsMobile} />
             </LoadingCover>
@@ -67,7 +69,9 @@ interface DriveListProps {
 const DriveList: FC<DriveListProps & RespLayoutProps> = (props) => {
     const { t } = useTranslation()
 
+    const [ clientCreating, showClientCreating ] = useState(false)
     const [ clientList, setClientList ] = useState<any[]>([])
+    const [ accountCreating, showAccountCreating ] = useState(false)
     const [ accountList, setAccountList ] = useState<any[]>([])
 
     const navigate = useNavigate()
@@ -125,102 +129,112 @@ const DriveList: FC<DriveListProps & RespLayoutProps> = (props) => {
     }, [props.client])
 
     return (
-        <Card
-            title={
-                <Row style={{padding: "0 6px"}}>
-                    <Breadcrumb
-                        data={breadcrumbData}
-                        onClick={(e, i, index) => {
-                            if (index === 0) {
-                                navigate("/profile/drive", {
-                                    state: null
-                                })
-                            }
-                        }}
-                        size={"md"}
-                        style={{
-                            marginBottom: 0,
-                            display: "flex",
-                            flex: 1,
-                        }}/>
-                    <Button
-                        type={"primary"}
-                        icon={<PlusOutlined />}>{
-                        props.client === null ? t("profile_drive_add_client") : t("profile_drive_add_account")
-                    }</Button>
-                </Row>
-            }
-            style={{
-                height: 400,
-            }}
-            showHeaderDivider={true}>
-            <Scrollbar>
-                <List
-                    style={{
-                        padding: "0 16px"
-                    }}
-                    bordered={false}
-                    data={(props.client === null ? clientList : accountList).map((item) => {
-                        const options: Intl.DateTimeFormatOptions = {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit"
-                        }
-
-                        if (props.client === null) {
-                            let icon: string
-                            const type = item["type"]
-                            if (type === "OneDrive") {
-                                icon = Ic_OneDrive
-                            } else {
-                                icon = Ic_Unknown
-                            }
-                            return {
-                                title: item["name"],
-                                description: t("profile_drive_last_modify") + Intl.DateTimeFormat(
-                                    navigator.language, options
-                                ).format(item["modify_at"]),
-                                avatar: icon,
-                                action: (
-                                    <BarsOutlined size={22} />
-                                ),
-                                onClick: () => {
+        <>
+            <Card
+                title={
+                    <Row style={{padding: "0 6px"}}>
+                        <Breadcrumb
+                            data={breadcrumbData}
+                            onClick={(e, i, index) => {
+                                if (index === 0) {
                                     navigate("/profile/drive", {
-                                        state: item as ClientState
+                                        state: null
                                     })
-                                },
-                            } as ListDataItem
-                        } else {
-                            return {
-                                title: item["display_name"] + " (" + item["user_principal_name"] + ")",
-                                description: t("profile_drive_last_modify") + Intl.DateTimeFormat(
-                                    navigator.language, options
-                                ).format(item["modify_at"]),
-                                action: (
-                                    <BarsOutlined size={22} />
-                                ),
-                                avatar: asInitials(item["display_name"]),
+                                }
+                            }}
+                            size={"md"}
+                            style={{
+                                marginBottom: 0,
+                                display: "flex",
+                                flex: 1,
+                            }}/>
+                        <Button
+                            type={"primary"}
+                            icon={<PlusOutlined />}
+                            onClick={() => {
+                                if (props.client === null) {
+                                    showClientCreating(true)
+                                } else {
+                                    showAccountCreating(true)
+                                }
+                            }}>{
+                            props.client === null ? t("profile_drive_add_client") : t("profile_drive_add_account")
+                        }</Button>
+                    </Row>
+                }
+                style={{
+                    height: "100%",
+                }}
+                showHeaderDivider={true}>
+                <Scrollbar>
+                    <List
+                        style={{
+                            padding: "0 16px",
+                        }}
+                        bordered={false}
+                        data={(props.client === null ? clientList : accountList).map((item) => {
+                            const options: Intl.DateTimeFormatOptions = {
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                second: "2-digit"
                             }
-                        }
-                    })}
-                    render={(dataItem: ListDataItem & {
-                        onClick?: () => void,
-                        avatarContent?: string
-                    }) => {
-                        console.log("renderDataItem: {}", dataItem)
-                        return props.client === null ? (
-                            <ClientItem {...dataItem} />
-                        ) : (
-                            <AccountItem {...dataItem} />
-                        )
-                    }}
-                    emptyContent={<EmptyState />}
-                />
-            </Scrollbar>
-        </Card>
+
+                            if (props.client === null) {
+                                let icon: string
+                                const type = item["type"]
+                                if (type === "OneDrive") {
+                                    icon = Ic_OneDrive
+                                } else {
+                                    icon = Ic_Unknown
+                                }
+                                return {
+                                    title: item["name"],
+                                    description: t("profile_drive_last_modify") + Intl.DateTimeFormat(
+                                        navigator.language, options
+                                    ).format(item["modify_at"]),
+                                    avatar: icon,
+                                    action: (
+                                        <BarsOutlined size={22} />
+                                    ),
+                                    onClick: () => {
+                                        navigate("/profile/drive", {
+                                            state: item as ClientState
+                                        })
+                                    },
+                                } as ListDataItem
+                            } else {
+                                return {
+                                    title: item["display_name"] + " (" + item["user_principal_name"] + ")",
+                                    description: t("profile_drive_last_modify") + Intl.DateTimeFormat(
+                                        navigator.language, options
+                                    ).format(item["modify_at"]),
+                                    action: (
+                                        <BarsOutlined size={22} />
+                                    ),
+                                    avatar: asInitials(item["display_name"]),
+                                }
+                            }
+                        })}
+                        render={(dataItem: ListDataItem & {
+                            onClick?: () => void,
+                            avatarContent?: string
+                        }) => {
+                            console.log("renderDataItem: {}", dataItem)
+                            return props.client === null ? (
+                                <ClientItem {...dataItem} />
+                            ) : (
+                                <AccountItem {...dataItem} />
+                            )
+                        }}
+                        emptyContent={t("not_found")}
+                    />
+                </Scrollbar>
+            </Card>
+            <ClientCreationDialog visible={clientCreating} requestClose={() => showClientCreating(false)} />
+        </>
     )
 }
 
@@ -246,8 +260,23 @@ const AccountItem: FC<ListDataItem & {
     avatarContent?: string
 }> = (props) => {
     return (
-        <div>
-            <ListItem {...props} />
+        <div
+            className={"dirveindex-profile-drive-account"}
+            style={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "row",
+            }}>
+            <Avatar
+                size={54}
+                style={{
+                    marginRight: 16,
+                }}
+                initials={asInitials(props.avatar)} />
+            <ListItem
+                title={props.title}
+                description={props.description}
+                action={props.action}/>
         </div>
     )
 }
