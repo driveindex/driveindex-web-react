@@ -73,14 +73,16 @@ const LoginPage: FC = () => {
                     }}
                     innerRef={formRef}>
                     <FormItem
-                        field={"username"} valueType={"string"}
-                        label={t("login_username")} labelPlacement={"top"}
+                        field={"username"}
+                        label={t("login_username")}
+                        labelPlacement={"top"}
                         showColon={false}>
                         <Input disabled={loginDoing}/>
                     </FormItem>
                     <FormItem
-                        field={"password"} valueType={"string"}
-                        label={t("login_password")} labelPlacement={"top"}
+                        field={"password"}
+                        label={t("login_password")}
+                        labelPlacement={"top"}
                         showColon={false}>
                         <Input type={"password"} disabled={loginDoing}/>
                     </FormItem>

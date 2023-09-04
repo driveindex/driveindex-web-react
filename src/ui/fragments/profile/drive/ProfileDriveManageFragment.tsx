@@ -1,14 +1,15 @@
-import React, {FC, HTMLAttributes, useEffect, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {
     Avatar,
     Breadcrumb,
     Button,
-    Card,
+    Card, Col,
     List,
     ListDataItem,
-    ListItem,
-    message, Modal,
+    ListItem, Menu,
+    message,
+    Popover,
     Row,
     Scrollbar
 } from "@hi-ui/hiui";
@@ -19,7 +20,7 @@ import {AxiosResponse} from "axios";
 import {checkLoginStatus, useLoginExpiredDialog} from "../../../../core/hooks/useLoginExpiredDialog";
 import {useLocation, useNavigate} from "react-router-dom";
 import "./ProfileDriveManageFragment.css"
-import {PlusOutlined, DeleteOutlined, BarsOutlined} from "@hi-ui/icons"
+import {BarsOutlined, PlusOutlined} from "@hi-ui/icons"
 import Ic_OneDrive from "../../../../static/drawable/drive/onedrive.svg"
 import Ic_Unknown from "../../../../static/drawable/drive/unknown.svg"
 import RespLayoutProps from "../../../../core/props/RespLayoutProps";
@@ -69,8 +70,10 @@ interface DriveListProps {
 const DriveList: FC<DriveListProps & RespLayoutProps> = (props) => {
     const { t } = useTranslation()
 
-    const [ clientCreating, showClientCreating ] = useState(false)
+    const [ clientCreating, showClientCreating ] = useState<boolean>(false)
+    const [ clientTarget, setClientTarget ] = useState<any | undefined>()
     const [ clientList, setClientList ] = useState<any[]>([])
+
     const [ accountCreating, showAccountCreating ] = useState(false)
     const [ accountList, setAccountList ] = useState<any[]>([])
 
@@ -196,13 +199,17 @@ const DriveList: FC<DriveListProps & RespLayoutProps> = (props) => {
                                         navigator.language, options
                                     ).format(item["modify_at"]),
                                     avatar: icon,
-                                    action: (
-                                        <BarsOutlined size={22} />
-                                    ),
                                     onClick: () => {
                                         navigate("/profile/drive", {
                                             state: item as ClientState
                                         })
+                                    },
+                                    onEdit: () => {
+                                        showClientCreating(true)
+                                        setClientTarget(item)
+                                    },
+                                    onDelete: () => {
+
                                     },
                                 } as ListDataItem
                             } else {
@@ -211,18 +218,21 @@ const DriveList: FC<DriveListProps & RespLayoutProps> = (props) => {
                                     description: t("profile_drive_last_modify") + Intl.DateTimeFormat(
                                         navigator.language, options
                                     ).format(item["modify_at"]),
-                                    action: (
-                                        <BarsOutlined size={22} />
-                                    ),
                                     avatar: asInitials(item["display_name"]),
+                                    onEdit: () => {
+
+                                    },
+                                    onDelete: () => {
+
+                                    },
                                 }
                             }
                         })}
                         render={(dataItem: ListDataItem & {
                             onClick?: () => void,
-                            avatarContent?: string
+                            onDelete?: () => void,
+                            onEdit?: () => void,
                         }) => {
-                            console.log("renderDataItem: {}", dataItem)
                             return props.client === null ? (
                                 <ClientItem {...dataItem} />
                             ) : (
@@ -233,13 +243,21 @@ const DriveList: FC<DriveListProps & RespLayoutProps> = (props) => {
                     />
                 </Scrollbar>
             </Card>
-            <ClientCreationDialog visible={clientCreating} requestClose={() => showClientCreating(false)} />
+            <ClientCreationDialog
+                visible={clientCreating}
+                requestClose={() => {
+                    showClientCreating(false)
+                    setClientTarget(undefined)
+                }}
+                initValue={clientTarget}/>
         </>
     )
 }
 
 const ClientItem: FC<ListDataItem & {
     onClick?: () => void
+    onDelete?: () => void,
+    onEdit?: () => void,
 }> = (props) => {
     const [ isShowDesktopAction, setShowDesktopAction ] = useState(false)
     useEffect(() => {
@@ -247,17 +265,30 @@ const ClientItem: FC<ListDataItem & {
     }, [isShowDesktopAction]);
     return (
         <div
-            onClick={() => {
+            style={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "row",
+            }}>
+            <div style={{
+                flex: 1
+            }} onClick={() => {
                 console.log("client item clicked!")
                 props.onClick!()
             }}>
-            <List.Item {...props}/>
+                <List.Item {...props}/>
+            </div>
+            <ItemMenu
+                onDelete={props.onDelete}
+                onEdit={props.onEdit}/>
         </div>
     )
 }
 
 const AccountItem: FC<ListDataItem & {
-    avatarContent?: string
+    onClick?: () => void
+    onDelete?: () => void,
+    onEdit?: () => void,
 }> = (props) => {
     return (
         <div
@@ -277,7 +308,55 @@ const AccountItem: FC<ListDataItem & {
                 title={props.title}
                 description={props.description}
                 action={props.action}/>
+            <ItemMenu
+                onDelete={props.onDelete}
+                onEdit={props.onEdit}/>
         </div>
+    )
+}
+
+const ItemMenu: FC<{
+    onDelete?: () => void,
+    onEdit?: () => void,
+}> = (props) => {
+    const { t } = useTranslation()
+    const [ show, setShow ] = useState(false)
+    return (
+        <Popover placement={"left"} content={
+            <div>
+                {
+                    props.onEdit !== undefined && (
+                        <Button
+                            type="default" appearance="link"
+                            style={{ width: 80 }}
+                            onClick={() => {
+                                setShow(false)
+                                props.onEdit!()
+                            }}>{
+                            t("profile_drive_creation_detail")
+                        }</Button>
+                    )
+                }
+                {
+                    props.onDelete !== undefined && (
+                        <Button
+                            type="danger" appearance="link"
+                            style={{ width: 80 }}
+                            onClick={() => {
+                                setShow(false)
+                                props.onDelete!()
+                            }}>{
+                            t("delete")
+                        }</Button>
+                    )
+                }
+            </div>
+        } visible={show}>
+            <BarsOutlined
+                size={22}
+                style={{ padding: 6 }}
+                onClick={() => setShow(true)}/>
+        </Popover>
     )
 }
 
