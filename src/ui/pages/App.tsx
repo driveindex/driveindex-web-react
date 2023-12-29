@@ -11,7 +11,7 @@ const SharePage = lazy(() => import("./share/SharePage"))
 const ProfilePage = lazy(() => import("./home/profile/ProfilePage"))
 const ProfileCommonFragment = lazy(() => import("../fragments/profile/ProfileCommonFragment"))
 const ProfileAccountFragment = lazy(() => import("../fragments/profile/ProfileAccountFragment"))
-const ProfileDrawManageFragment = lazy(() => import("../fragments/profile/drive/ProfileDriveManageFragment"))
+const ProfileDrawManageFragment = lazy(() => import("../fragments/profile/ProfileDriveManageFragment"))
 const ProfilePasswordFragment = lazy(() => import("../fragments/profile/ProfilePasswordFragment"))
 
 const App: FC = () => {
@@ -41,7 +41,7 @@ const App: FC = () => {
                                     <ProfileAccountFragment />
                                 </Suspense>
                             } />
-                            <Route path={"/profile/drive"} element={
+                            <Route path={"/profile/drive/:clientId"} element={
                                 <Suspense fallback={<Fallback />}>
                                     <ProfileDrawManageFragment />
                                 </Suspense>

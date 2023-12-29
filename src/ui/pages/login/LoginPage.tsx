@@ -44,13 +44,14 @@ const LoginPage: FC = () => {
                         onClose={() => {setAlert(null)}}
                         style={{
                             width: 310,
+                            marginTop: 12,
                         }}/>
                 )
             }
             <Card
                 style={{
                     width: 310,
-                    marginTop: 24,
+                    marginTop: alert ? 0 : 24,
                 }}>
                 <Form
                     initialValues={{ username: UserPref.Username, password: process.env.REACT_APP_ADMIN_PASSWORD ?? "" }}

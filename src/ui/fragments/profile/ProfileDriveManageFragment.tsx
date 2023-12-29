@@ -13,20 +13,20 @@ import {
     Row,
     Scrollbar
 } from "@hi-ui/hiui";
-import {LoadingCover, useLoading} from "../../../../core/hooks/useLoading";
+import {LoadingCover, useLoading} from "../../../core/hooks/useLoading";
 import {BreadcrumbDataItem} from "@hi-ui/breadcrumb/lib/types/types";
-import {DriveIndexAPI} from "../../../../core/axios";
+import {DriveIndexAPI, DriveType} from "../../../core/axios";
 import {AxiosResponse} from "axios";
-import {checkLoginStatus, useLoginExpiredDialog} from "../../../../core/hooks/useLoginExpiredDialog";
-import {useLocation, useNavigate} from "react-router-dom";
+import {checkLoginStatus, useLoginExpiredDialog} from "../../../core/hooks/useLoginExpiredDialog";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import "./ProfileDriveManageFragment.css"
 import {BarsOutlined, PlusOutlined} from "@hi-ui/icons"
-import Ic_OneDrive from "../../../../static/drawable/drive/onedrive.svg"
-import Ic_Unknown from "../../../../static/drawable/drive/unknown.svg"
-import RespLayoutProps from "../../../../core/props/RespLayoutProps";
-import {useBreakpointDown, useBreakpointUp} from "../../../../core/hooks/useViewport";
-import {asInitials} from "../../../../core/util/_String";
-import ClientCreationDialog from "../../../components/profile/drive/ClientCreationDialog";
+import Ic_OneDrive from "../../../static/drawable/drive/onedrive.svg"
+import Ic_Unknown from "../../../static/drawable/drive/unknown.svg"
+import RespLayoutProps from "../../../core/props/RespLayoutProps";
+import {useBreakpointDown, useBreakpointUp} from "../../../core/hooks/useViewport";
+import {asInitials} from "../../../core/util/_String";
+import ClientCreationDialog from "../../components/profile/drive/ClientCreationDialog";
 
 
 type ClientBreadcrumbDataItem = BreadcrumbDataItem & {
@@ -59,9 +59,8 @@ const ProfileDriveManageFragment: FC = () => {
 }
 
 interface ClientState {
-    id: string,
     name: string,
-    type: string,
+    type: DriveType,
 }
 
 interface DriveListProps {
@@ -77,6 +76,8 @@ const DriveList: FC<DriveListProps & RespLayoutProps> = (props) => {
     const [ accountCreating, showAccountCreating ] = useState(false)
     const [ accountList, setAccountList ] = useState<any[]>([])
 
+    const { clientId } = useParams()
+
     const navigate = useNavigate()
     const { setLoading } = useLoading()
     const showLoginExpiredDialog = useLoginExpiredDialog()
@@ -89,10 +90,14 @@ const DriveList: FC<DriveListProps & RespLayoutProps> = (props) => {
         setLoading(true)
         setTimeout(() => {
             let request: Promise<AxiosResponse<any, any>>
-            if (props.client === null) {
+            if (clientId === undefined) {
                 request = DriveIndexAPI.get("/api/user/client")
             } else {
-                request = DriveIndexAPI.get("/api/user/account?client_id="+props.client.id)
+                request = DriveIndexAPI.get("/api/user/account", {
+                    params: {
+                        client_id: clientId
+                    }
+                })
             }
             request.then((resp) => {
                 if (!checkLoginStatus(resp, showLoginExpiredDialog)) {
@@ -103,9 +108,9 @@ const DriveList: FC<DriveListProps & RespLayoutProps> = (props) => {
                         title: t("profile_drive_failed") + resp.data["message"],
                         type: "error",
                     })
-                    return;
+                    return
                 }
-                if (props.client === null) {
+                if (clientId === undefined) {
                     setClientList(resp.data["data"])
                     setAccountList([])
                 } else {
@@ -116,20 +121,90 @@ const DriveList: FC<DriveListProps & RespLayoutProps> = (props) => {
             })
         }, 200)
     }
+    const creatingAccount = () => {
+        showAccountCreating(true)
+        const type = props.client!!.type
+        console.log("type: ", type)
+        if (type === DriveType.OneDrive) {
+            DriveIndexAPI.get("/api/user/login/url/onedrive", {
+                params: {
+                    client_id: clientId,
+                    redirect_uri: "http://localhost:8009/redirect/drive/onedrive",
+                }
+            }).then((resp) => {
+                if (!checkLoginStatus(resp, showLoginExpiredDialog)) {
+                    return
+                }
+                if (resp.data["code"] !== 200) {
+                    message.open({
+                        title: t("profile_drive_account_failed") + resp.data["message"],
+                        type: "error",
+                    })
+                    return
+                }
+                window.open(resp.data["data"]["redirect_url"], "_self")
+            })
+        } else {
+            showAccountCreating(false)
+            message.open({
+                title: t("internal_error") + t("profile_drive_account_internal_unknown_type"),
+                type: "error",
+            })
+        }
+    }
     useEffect(() => {
+        showAccountCreating(false)
         const base: ClientBreadcrumbDataItem[] = [
             {
                 title: t("profile_drive_breadcrumb"),
             }
         ]
+        if (clientId === undefined) {
+            setBreadcrumbData(base)
+            refreshContent()
+            return
+        }
         if (props.client !== null) {
             base.push({
                 title: props.client.name
             })
+            setBreadcrumbData(base)
+            refreshContent()
+            return
         }
-        setBreadcrumbData(base)
-        refreshContent()
-    }, [props.client])
+        setLoading(true)
+        DriveIndexAPI.get("/api/user/client").then((resp) => {
+            if (!checkLoginStatus(resp, showLoginExpiredDialog)) {
+                return
+            }
+            if (resp.data["code"] !== 200) {
+                message.open({
+                    title: t("profile_drive_failed") + resp.data["message"],
+                    type: "error",
+                })
+                setLoading(false)
+                return
+            }
+            const data = resp.data["data"]
+            for (const index in data) {
+                if (data[index]["id"] !== clientId) {
+                    continue
+                }
+                setLoading(false)
+                navigate("/profile/drive/"+clientId, {
+                    state: {
+                        name: data[index]["name"],
+                        type: data[index]["type"],
+                    }
+                })
+                return
+            }
+            setLoading(false)
+            navigate("/profile/drive", {
+                state: null
+            })
+        })
+    }, [clientId, props.client])
 
     return (
         <>
@@ -151,18 +226,23 @@ const DriveList: FC<DriveListProps & RespLayoutProps> = (props) => {
                                 display: "flex",
                                 flex: 1,
                             }}/>
-                        <Button
-                            type={"primary"}
-                            icon={<PlusOutlined />}
-                            onClick={() => {
-                                if (props.client === null) {
-                                    showClientCreating(true)
-                                } else {
-                                    showAccountCreating(true)
-                                }
-                            }}>{
-                            props.client === null ? t("profile_drive_add_client") : t("profile_drive_add_account")
-                        }</Button>
+                        {
+                            props.client === null ?
+                                <Button
+                                    type={"primary"}
+                                    icon={<PlusOutlined />}
+                                    onClick={() => {
+                                        showClientCreating(true)
+                                    }}>{t("profile_drive_add_client")}</Button> :
+                                <Button
+                                    type={"primary"}
+                                    icon={<PlusOutlined />}
+                                    loading={accountCreating}
+                                    disabled={accountCreating}
+                                    onClick={() => {
+                                        creatingAccount()
+                                    }}>{t("profile_drive_add_account")}</Button>
+                        }
                     </Row>
                 }
                 style={{
@@ -200,7 +280,7 @@ const DriveList: FC<DriveListProps & RespLayoutProps> = (props) => {
                                     ).format(item["modify_at"]),
                                     avatar: icon,
                                     onClick: () => {
-                                        navigate("/profile/drive", {
+                                        navigate("/profile/drive/"+item["id"], {
                                             state: item as ClientState
                                         })
                                     },

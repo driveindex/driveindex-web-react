@@ -10,6 +10,8 @@
   "loading": "加载中...",
   "not_found": "这里什么都没有",
 
+  "internal_error": "内部错误：",
+
   "login_title": "登录到 DriveIndex",
   "login_username": "账号",
   "login_username_hint": "请输入账号",
@@ -67,6 +69,8 @@
   "profile_drive_breadcrumb": "我的储存池",
   "profile_drive_failed": "获取失败：",
   "profile_drive_last_modify": "最后修改：",
+  "profile_drive_account_failed": "账号添加失败：",
+  "profile_drive_account_internal_unknown_type": "未知 type",
 
   "profile_drive_creation_name": "名称",
   "profile_drive_creation_name_empty": "名称不能为空",

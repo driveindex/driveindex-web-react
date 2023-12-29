@@ -53,6 +53,7 @@ const HomePage: FC = () => {
     )
 
     const [ createDirShow, showCreateDir ] = useState(false)
+    const [ createLinkShow, showCreateLink ] = useState(false)
     const [ createDirLoading, setCreateLoading ] = useState(false)
 
     return (
@@ -76,7 +77,13 @@ const HomePage: FC = () => {
                             onClick={() => showCreateDir(true)}>
                             {t("home_file_create_dir")}
                         </Button>
-                        <Button type={"secondary"} icon={<LinkOutlined />} size={"lg"}>{t("home_file_create_link")}</Button>
+                        <Button
+                            type={"secondary"}
+                            icon={<LinkOutlined />}
+                            size={"lg"}
+                            onClick={() => showCreateLink(true)}>
+                            {t("home_file_create_link")}
+                        </Button>
                     </Row>
                     {
                         showAsMobile || (
@@ -147,10 +154,13 @@ function getFileListByPath(
     t: TFunction<"translation", undefined>,
 ) {
     setFileList(undefined)
-    DriveIndexAPI.get("/api/user/file/list?path=" + encodeURIComponent(path), {
+    DriveIndexAPI.get("/api/user/file/list", {
+        params: {
+            path: path
+        },
         headers: {
-            "Authorization": true
-        }
+            Authorization: true
+        },
     }).then((resp) => {
         if (!checkLoginStatus(resp, showLoginExpiredDialog)) {
             return
